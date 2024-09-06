@@ -1,10 +1,23 @@
-/* Requires the Docker Pipeline plugin */
 pipeline {
-    agent { docker { image 'node:20.17.0-alpine3.20' } }
+    agent any
+
     stages {
-        stage('build') {
+        stage('Install') {
             steps {
-                sh 'node --version'
+                sh 'yarn install'
+            }
+        }
+        stage('Lint and format') {
+            steps {
+                sh 'yarn biome lint'
+            }
+            steps {
+                sh 'yarn biome format'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'yarn build'
             }
         }
     }
