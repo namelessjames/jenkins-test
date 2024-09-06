@@ -5,25 +5,33 @@ pipeline {
         stage('Install') {
             steps {
                 echo 'Installing dependencies...'
-                sh 'yarn install'
+                pwsh '''
+                yarn install
+                '''
             }
         }
         stage('Linting') {
             steps {
                 echo 'Linting...'
-                sh 'yarn biome lint'
+                pwsh '''
+                yarn biome lint
+                '''
             }
         }
         stage('Formatting') {
             steps {
                 echo 'Formatting...'
-                sh 'yarn biome format'
+                pwsh '''
+                yarn biome format
+                '''
             }
         }
         stage('Build') {
             steps {
                 echo 'Building...'
-                sh 'yarn build'
+                pwsh '''
+                yarn build
+                '''
             }
         }
     }
