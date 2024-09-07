@@ -15,9 +15,6 @@ pipeline {
                 checkout scm
             }
         }
-    }
-
-    stages {        
         stage('Generating SBOM') {
             steps {
                 echo 'Switching to Yarn 4.4.1...'
@@ -87,8 +84,9 @@ pipeline {
                 yarn build
                 '''
             }
-        }
-        post {
+        }        
+    }
+    post {
             // Clean after build
             always {
                 cleanWs(cleanWhenNotBuilt: false,
@@ -99,5 +97,4 @@ pipeline {
                                 [pattern: '.propsfile', type: 'EXCLUDE']])
             }
         }
-    }
 }
