@@ -38,7 +38,7 @@ pipeline {
             steps {
                 echo 'Putting SBOM to Dependency-Track...'
                 pwsh '''
-                $json = Get-Content -Path './sbom.json' -Encoding byte
+                $json = Get-Content -Path './sbom.json' -AsByteStream -Raw
 
                 $ApiKey = 'odt_hDA8EDlbnAslMQwj4jWbsGEvVxpfJRlS'
                 $Header = @{'X-API-Key' = $ApiKey}
