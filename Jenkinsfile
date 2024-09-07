@@ -1,20 +1,13 @@
 pipeline {
     agent any
 
-    stages {
-        stage('Install') {
-            steps {
-                echo 'Installing dependencies...'
-                pwsh '''
-                yarn install
-                '''
-            }
-        }
+    stages {        
         stage('Generating SBOM') {
             steps {
                 echo 'Switching to Yarn 4.4.1...'
                 pwsh '''
                 yarn set version 4.4.1
+                yarn install
                 '''
 
                 echo 'Installing cyclonedx...'
@@ -24,12 +17,7 @@ pipeline {
 
                 echo 'Generating SBOM...'
                 pwsh '''
-                yarn cyclonedx --spec-version 1.4 --output-format json --output-file --production ./sbom.json
-                '''
-                                
-                echo 'Switching back to Yarn classic...'
-                pwsh '''
-                yarn set version 1.22.22
+                yarn exec cyclonedx-yarn --spec-version 1.4 --output-format json --output-file --production ./sbom.json
                 '''
             }
         }
@@ -41,6 +29,19 @@ pipeline {
                     -H 'Content-Type: application/json' \
                     -H 'X-API-Key: odt_hDA8EDlbnAslMQwj4jWbsGEvVxpfJRlS' \
                     -d @sbom.json
+                '''
+            }
+        }
+        stage('Install') {
+            steps {
+                echo 'Switching back to Yarn classic...'
+                pwsh '''
+                yarn set version 1.22.22
+                '''
+
+                echo 'Installing dependencies...'
+                pwsh '''
+                yarn install
                 '''
             }
         }
